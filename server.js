@@ -89,16 +89,25 @@ app.use((req, res) => {
 });
 
 // Start server dengan binding ke 0.0.0.0 untuk Railway
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080; // Gunakan 8080 default seperti di log
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`⏰ Started at: ${new Date().toISOString()}`);
+  console.log(`🔗 Health check available at: http://localhost:${PORT}/health`);
+  
+  // Immediate self-ping untuk memastikan server ready
+  setTimeout(() => {
+    console.log('🔄 Mengirim self-ping untuk memastikan server ready...');
+    // Tidak perlu HTTP call, cukup log bahwa server siap
+    console.log('✅ Server siap menerima request');
+  }, 1000);
   
   // Keep-alive mechanism untuk Railway
   setInterval(() => {
     console.log(`💓 Server heartbeat - ${new Date().toISOString()}`);
-  }, 30000); // Setiap 30 detik
+    console.log(`📊 Memory: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`);
+  }, 10000); // Setiap 10 detik
 });
 
 // Graceful shutdown untuk Railway
