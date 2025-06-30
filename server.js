@@ -44,6 +44,11 @@ app.use("/api/assistant", assistantRoutes);
 app.use("/api/profile", profileRoutes);
 app.use('/api/news', newsRoutes);
 
+// ✅ Tambahkan ini agar Railway tahu server masih hidup
+app.get("/", (req, res) => {
+  res.send("🚀 Server is up and running!");
+});
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
