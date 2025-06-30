@@ -24,7 +24,6 @@ if (!fs.existsSync(avatarPath)) {
   console.log("📁 Folder 'public/uploads/avatars' berhasil dibuat.");
 }
 
-
 const app = express();
 
 // Middleware umum
@@ -32,7 +31,35 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use("/uploads", express.static("public/uploads"));
 
+// Health check endpoint untuk Railway
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage()
+  });
+});
 
+// Root endpoint untuk Railway
+app.get("/", (req, res) => {
+  res.json({
+    message: "🚀 Dana Backend API is running!",
+    status: "active",
+    timestamp: new Date().toISOString(),
+    endpoints: [
+      "/api/auth",
+      "/api/balance", 
+      "/api/transaction",
+      "/api/history",
+      "/api/notifications",
+      "/api/assistant",
+      "/api/profile",
+      "/api/news",
+      "/health"
+    ]
+  });
+});
 
 // Routes utama
 app.use("/api/auth", authRoutes);
@@ -44,11 +71,55 @@ app.use("/api/assistant", assistantRoutes);
 app.use("/api/profile", profileRoutes);
 app.use('/api/news', newsRoutes);
 
-// ✅ Tambahkan ini agar Railway tahu server masih hidup
-app.get("/", (req, res) => {
-  res.send("🚀 Server is up and running!");
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ 
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+  });
 });
 
-// Start server
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({ 
+    error: 'Route not found',
+    path: req.originalUrl 
+  });
+});
+
+// Start server dengan binding ke 0.0.0.0 untuk Railway
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`⏰ Started at: ${new Date().toISOString()}`);
+});
+
+// Graceful shutdown untuk Railway
+process.on('SIGTERM', () => {
+  console.log('🛑 Menerima SIGTERM dari Railway, shutdown gracefully...');
+  server.close(() => {
+    console.log('✅ Server ditutup dengan baik');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('🛑 Menerima SIGINT, shutdown gracefully...');
+  server.close(() => {
+    console.log('✅ Server ditutup dengan baik');
+    process.exit(0);
+  });
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
