@@ -56,15 +56,23 @@ router.post('/send', (req, res) => {
 
         const handleInsertTransaction = () => {
           db.query(`
-            INSERT INTO transactions 
-            (from_user_id, to_user_id, to_username, amount, label, note, type, status)
-            VALUES (?, ?, ?, ?, ?, ?, 'pengiriman', 'sukses')
-          `, [from_user_id, to_user_id, to_username, nominal, label, note], (err) => {
-            if (err) {
-              console.error(err);
-              return res.status(500).json({ message: 'Gagal simpan transaksi' });
-            }
-
+  INSERT INTO transactions 
+  (from_user_id, to_user_id, to_username, amount, label, note, type, status)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+`, [
+  from_user_id,
+  to_user_id,
+  to_username,
+  nominal,
+  label,
+  note || '', // fallback jika kosong
+  'pengiriman',
+  'sukses'
+], (err) => {
+  if (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Gagal simpan transaksi' });
+  }
             const labelDesc = label !== 'Tidak Ditetapkan' ? `untuk ${label}` : 'tanpa label tertentu';
             const noteDesc = note !== '' ? ` (Catatan: ${note})` : '';
 
