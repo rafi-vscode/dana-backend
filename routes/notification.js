@@ -23,19 +23,18 @@ router.post('/read', (req, res) => {
   res.json({ message: '✅ Diberi status dibaca' });
 });
 
-// 🔔 Ambil notifikasi yang belum dibaca (unread)
-// Notifikasi yang belum dibaca
+// 🔔 Ambil notifikasi yang belum dibaca
 router.get('/unread/:userId', (req, res) => {
   const { userId } = req.params;
 
-  db.query(`
-    SELECT * FROM notifications
-    WHERE user_id = ? AND is_read = 0
-    ORDER BY created_at DESC
-  `, [userId], (err, result) => {
-    if (err) return res.status(500).json({ message: 'Gagal ambil notifikasi' });
-    res.json(result);
-  });
+  db.query(
+    `SELECT * FROM notifications WHERE user_id = ? AND is_read = 0 ORDER BY created_at DESC`,
+    [userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ message: 'Gagal ambil notifikasi belum dibaca' });
+      res.json(result);
+    }
+  );
 });
 
 export default router;
