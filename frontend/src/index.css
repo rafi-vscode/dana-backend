@@ -1,0 +1,20 @@
+@import "tailwindcss/theme";
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.bg-primary {
+  @apply bg-blue-600;
+}
+
+.text-primary {
+  @apply text-blue-600;
+}
+
+

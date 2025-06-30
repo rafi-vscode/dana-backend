@@ -1,0 +1,13 @@
+@import "tailwindcss/theme";
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #0c10e9;
+}
