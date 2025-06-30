@@ -29,7 +29,7 @@ export default function Notifications() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/news")
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/news`)
       .then(res => setArticles(res.data.items))
       .catch(() => setError("❌ Gagal muat berita"))
       .finally(() => setLoading(false));

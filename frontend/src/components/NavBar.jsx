@@ -11,8 +11,9 @@ const Navbar = () => {
     try {
       const userId = localStorage.getItem("userId"); // disamakan dengan Assistant.jsx
       if (!userId) return;
-
-      const res = await axios.get(`http://localhost:3000/api/notification/unread/${userId}`);
+      
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const res = await axios.get(`${API_BASE_URL}/notification/unread/${userId}`);
       const newCount = res.data.count || 0;
 
       setUnreadCount((prevCount) => (prevCount !== newCount ? newCount : prevCount));

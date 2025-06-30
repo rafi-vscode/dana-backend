@@ -37,6 +37,7 @@ const Kirim = () => {
   const [success, setSuccess] = useState(false);
   const [scannerActive, setScannerActive] = useState(false);
   const [loading, setLoading] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const scannerRef = useRef(null);
 
@@ -68,7 +69,7 @@ const Kirim = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/transaction/send",
+        `${API_BASE_URL}/transaction/send`,
         {
           to_user_id: toUserId,
           to_username: toUsername,

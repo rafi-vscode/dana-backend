@@ -23,7 +23,8 @@ export default function Register() {
     }
 
     try {
-      await axios.post("http://localhost:3000/api/auth/register", { username, password });
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, { username, password });
+
       alert("✅ Registrasi berhasil! Silakan login.");
       navigate("/");
     } catch (err) {

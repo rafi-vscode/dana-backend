@@ -41,7 +41,7 @@ export const chatWithAssistant = async (req, res) => {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "http://localhost:3000", // Ubah jika sudah dihosting
+          "HTTP-Referer": "https://dana-backend-production-eb09.up.railway.app",// Ubah jika sudah dihosting
           "X-Title": "Nailong Assistant",
         },
       }

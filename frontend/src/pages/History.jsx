@@ -9,9 +9,11 @@ const History = () => {
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const userId = localStorage.getItem("userId"); // Pastikan key-nya adalah 'user_id'
+      const userId = localStorage.getItem("userId");
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Pastikan key-nya adalah 'user_id'
       try {
-        const res = await axios.get(`http://localhost:3000/api/history/${userId}`);
+        
+        const res = await axios.get(`${API_BASE_URL}/history/${userId}`);
         setTransactions(res.data);
       } catch (err) {
         console.error("❌ Gagal mengambil riwayat:", err);

@@ -38,7 +38,8 @@ const Use = () => {
   useEffect(() => {
     const fetchLabeledBalances = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/balance/${userId}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/balance/${userId}`);
+
         setBalances(Array.isArray(res.data) ? res.data : []);
       } catch {
         setBalances([]);
@@ -55,7 +56,7 @@ const Use = () => {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:3000/api/transaction/use", {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/transaction/use`, {
         user_id: userId,
         from_user_id: selectedBalance.from_user_id,
         label_use: selectedBalance.label,

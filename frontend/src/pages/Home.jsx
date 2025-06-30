@@ -11,6 +11,7 @@ export default function FinancialDashboard() {
   const [activeTab, setActiveTab] = useState("home");
   const username = localStorage.getItem("username") || "User";
   const [avatarUrl, setAvatarUrl] = useState("");
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
   useEffect(() => {
@@ -22,7 +23,8 @@ export default function FinancialDashboard() {
           return;
         }
 
-        const res = await axios.get(`http://localhost:3000/api/balance/${userId}`);
+        const res = await axios.get(`${API_BASE_URL}/balance/${userId}`);
+
         setBalances(res.data);
       } catch (err) {
         console.error("Error saat fetch saldo:", err);
@@ -30,13 +32,13 @@ export default function FinancialDashboard() {
       }
     };
     fetchBalances();
-  }, []);
+  }, [API_BASE_URL]);
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         const user_id = localStorage.getItem("userId");
-        const res = await axios.get(`http://localhost:3000/api/history/${user_id}`);
+        const res = await axios.get(`${API_BASE_URL}/history/${user_id}`);
 
         const grouped = {};
 
@@ -68,7 +70,7 @@ export default function FinancialDashboard() {
   };
 
   fetchHistory();
-}, []);
+}, [API_BASE_URL]);
 
 useEffect(() => {
   const fetchAvatar = async () => {
@@ -76,16 +78,16 @@ useEffect(() => {
     if (!userId) return;
 
     try {
-      const res = await axios.get(`http://localhost:3000/api/profile/avatar/${userId}`);
+      const res = await axios.get(`${API_BASE_URL}/profile/avatar/${userId}`);
       if (res.data.avatar) {
-        setAvatarUrl(`http://localhost:3000${res.data.avatar}`);
+        setAvatarUrl(`${API_BASE_URL.replace("/api", "")}${res.data.avatar}`);
       }
     } catch (err) {
       console.warn("⚠️ Avatar tidak ditemukan:", err.response?.data?.message || err.message);
     }
   };
   fetchAvatar();
-}, []);
+}, [API_BASE_URL]);
 
   const totalBalance = balances.reduce((sum, balance) => sum + parseFloat(balance.amount || 0), 0);
 

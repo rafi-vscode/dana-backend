@@ -13,9 +13,11 @@ const Profile = () => {
 
   useEffect(() => {
   if (id) {
-    axios.get(`http://localhost:3000/api/profile/avatar/${id}`)
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/profile/avatar/${id}`)
+
       .then((res) => {
-        setAvatarUrl(`http://localhost:3000${res.data.avatar}?${Date.now()}`);
+        const base = import.meta.env.VITE_API_BASE_URL.replace("/api", "");
+        setAvatarUrl(`${base}${res.data.avatar}?${Date.now()}`);
       })
       .catch(() => {
         setAvatarUrl(""); // fallback jika avatar tidak ada
@@ -33,8 +35,9 @@ const Profile = () => {
     formData.append("avatar", file);
 
     try {
-      await axios.post(`http://localhost:3000/api/profile/upload/${id}`, formData);
-      setAvatarUrl(`http://localhost:3000/uploads/avatars/${id}.${ext}?${Date.now()}`);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/profile/upload/${id}`, formData);
+      const base = import.meta.env.VITE_API_BASE_URL.replace("/api", "");
+      setAvatarUrl(`${base}/uploads/avatars/${id}.${ext}?${Date.now()}`);
       setStatusMsg("✅ Foto profil berhasil diperbarui.");
     } catch (err) {
       console.error("❌ Upload gagal:", err);
@@ -47,7 +50,7 @@ const Profile = () => {
       const confirmed = window.confirm("Yakin ingin menghapus foto profil?");
       if (!confirmed) return;
 
-      await axios.delete(`http://localhost:3000/api/profile/avatar/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/profile/avatar/${id}`);
       setAvatarUrl("");
       setStatusMsg("✅ Foto profil berhasil dihapus.");
     } catch (err) {
