@@ -58,7 +58,7 @@ router.post('/send', (req, res) => {
           db.query(`
             INSERT INTO transactions 
             (from_user_id, to_user_id, to_username, amount, label, note, type, status)
-            VALUES (?, ?, ?, ?, ?, 'pengiriman', 'sukses')
+            VALUES (?, ?, ?, ?, ?, ?, 'pengiriman', 'sukses')
           `, [from_user_id, to_user_id, to_username, nominal, label, note], (err) => {
             if (err) {
               console.error(err);
