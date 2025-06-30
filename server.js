@@ -94,11 +94,18 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`⏰ Started at: ${new Date().toISOString()}`);
+  
+  // Keep-alive mechanism untuk Railway
+  setInterval(() => {
+    console.log(`💓 Server heartbeat - ${new Date().toISOString()}`);
+  }, 30000); // Setiap 30 detik
 });
 
 // Graceful shutdown untuk Railway
 process.on('SIGTERM', () => {
   console.log('🛑 Menerima SIGTERM dari Railway, shutdown gracefully...');
+  console.log(`⏰ Uptime sebelum shutdown: ${process.uptime()} seconds`);
+  console.log(`💾 Memory usage: ${JSON.stringify(process.memoryUsage())}`);
   server.close(() => {
     console.log('✅ Server ditutup dengan baik');
     process.exit(0);
@@ -107,6 +114,7 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
   console.log('🛑 Menerima SIGINT, shutdown gracefully...');
+  console.log(`⏰ Uptime sebelum shutdown: ${process.uptime()} seconds`);
   server.close(() => {
     console.log('✅ Server ditutup dengan baik');
     process.exit(0);
