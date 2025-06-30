@@ -24,6 +24,7 @@ router.post('/read', (req, res) => {
 });
 
 // 🔔 Ambil notifikasi yang belum dibaca (unread)
+// Notifikasi yang belum dibaca
 router.get('/unread/:userId', (req, res) => {
   const { userId } = req.params;
 
@@ -32,11 +33,7 @@ router.get('/unread/:userId', (req, res) => {
     WHERE user_id = ? AND is_read = 0
     ORDER BY created_at DESC
   `, [userId], (err, result) => {
-    if (err) {
-      console.error("❌ Error ambil notifikasi:", err);
-      return res.status(500).json({ message: 'Gagal ambil notifikasi belum dibaca' });
-    }
-
+    if (err) return res.status(500).json({ message: 'Gagal ambil notifikasi' });
     res.json(result);
   });
 });
