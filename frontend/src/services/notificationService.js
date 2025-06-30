@@ -7,6 +7,11 @@ export const getUserNotifications = async (userId) => {
   return res.data; // ini harus langsung array
 };
 
+export const getUnreadNotifications = async (userId) => {
+  const res = await axios.get(`${API_BASE_URL}/notifications/unread/${userId}`); // ← benar
+  return res.data;
+};
+
 export const markNotificationRead = async (notificationId) => {
   await axios.post(`${API_BASE_URL}/notifications/read`, {
     notificationId,
