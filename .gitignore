@@ -1,0 +1,13 @@
+# Abaikan environment file
+.env
+
+# Abaikan folder dependency
+node_modules/
+
+# Abaikan folder build frontend (kalau kamu build pakai Vite atau React)
+frontend/dist/
+frontend/build/
+
+# Abaikan file sistem & editor
+.DS_Store
+.vscode/
