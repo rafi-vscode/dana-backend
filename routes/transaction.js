@@ -59,7 +59,7 @@ router.post('/send', (req, res) => {
             INSERT INTO transactions 
             (from_user_id, to_user_id, to_username, amount, label, note, type, status)
             VALUES (?, ?, ?, ?, ?, 'pengiriman', 'sukses')
-          `, [from_user_id, to_user_id, nominal, label, note], (err) => {
+          `, [from_user_id, to_user_id, to_username, nominal, label, note], (err) => {
             if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Gagal simpan transaksi' });
