@@ -152,11 +152,13 @@ const History = () => {
                     </div>
                   )}
 
-                  {tx.status !== "sukses" && tx.reason && (
-                    <div className="text-sm text-red-600 bg-red-50 p-3 rounded-xl mb-2">
-                      <span className="font-medium">Alasan gagal:</span>{" "} {tx.reason.replace("asli:", "Label:")}
-                    </div>
-                  )}
+                  {tx.status !== "sukses" && (
+  <div className="text-sm text-red-600 bg-red-50 p-3 rounded-xl mb-2">
+    <span className="font-medium">Alasan gagal:</span>{" "}
+    {tx.reason ? tx.reason.replace("asli:", "Label:") : "Tidak tersedia"}
+  </div>
+)}
+
 
                   {tx.type === "penggunaan" && (
                     <div className="bg-blue-50 p-3 rounded-xl">

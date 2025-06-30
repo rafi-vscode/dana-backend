@@ -27,6 +27,7 @@ if (!fs.existsSync(avatarPath)) {
 const app = express();
 
 // Middleware umum
+app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/uploads", express.static("public/uploads"));
@@ -66,7 +67,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/balance", balanceRoutes);
 app.use("/api/transaction", transactionRoutes);
 app.use("/api/history", historyRoutes);
-app.use("/api/notifications", notificationRoutes);
+app.use("/api/notification", notificationRoutes);
 app.use("/api/assistant", assistantRoutes); 
 app.use("/api/profile", profileRoutes);
 app.use('/api/news', newsRoutes);

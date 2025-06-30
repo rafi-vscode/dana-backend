@@ -1,3 +1,4 @@
+// routes/notification.js
 import express from 'express';
 import db from '../db.js';
 
@@ -17,7 +18,7 @@ router.get('/unread/:userId', (req, res) => {
   });
 });
 
-// Ambil semua notifikasi untuk user tertentu
+// Ambil semua notifikasi user
 router.get('/:userId', (req, res) => {
   const { userId } = req.params;
 
@@ -31,12 +32,11 @@ router.get('/:userId', (req, res) => {
   });
 });
 
-// Tandai notifikasi sebagai sudah dibaca
+// Tandai sebagai sudah dibaca
 router.post('/read', (req, res) => {
   const { notificationId } = req.body;
-
-  db.query(`UPDATE notifications SET is_read = 1 WHERE id = ?`, [notificationId], (err, result) => {
-    if (err) return res.status(500).json({ message: 'Gagal menandai notifikasi' });
+  db.query(`UPDATE notifications SET is_read = 1 WHERE id = ?`, [notificationId], (err) => {
+    if (err) return res.status(500).json({ message: 'Gagal update notifikasi' });
     res.json({ message: '✅ Diberi status dibaca' });
   });
 });

@@ -121,7 +121,8 @@ router.post('/send', (req, res) => {
 // ==============================
 // 2. Gunakan Dana (label opsional)
 // ==============================
-router.post('/use', (req, res) => {
+router.post('/use', express.json(), (req, res) => {
+  console.log("🧾 Data penggunaan:", req.body);
   let { user_id, from_user_id, label_use, label_input, amount, note } = req.body;
   const nominal = parseFloat(amount);
 

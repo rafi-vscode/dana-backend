@@ -1,4 +1,3 @@
-// controllers/profileController.js
 import fs from "fs";
 import path from "path";
 import conn from "../db.js";
@@ -13,16 +12,20 @@ export const updateAvatar = (req, res) => {
     return res.status(400).json({ message: "user_id dan file wajib diisi." });
   }
 
-  const avatarPath = `/uploads/avatars/${file.filename}`;
+  const ext = path.extname(file.originalname).toLowerCase();
+  const newFilename = `${user_id}${ext}`;
+  const oldPath = file.path;
+  const newPath = path.join("public", "uploads", "avatars", newFilename);
 
-  conn.query(
-    "UPDATE users SET avatar = ? WHERE id = ?",
-    [avatarPath, user_id],
-    (err) => {
-      if (err) return res.status(500).json({ message: "Gagal update avatar" });
+  fs.rename(oldPath, newPath, (err) => {
+    if (err) return res.status(500).json({ message: "Gagal menyimpan avatar" });
+
+    const avatarPath = `/uploads/avatars/${newFilename}`;
+    conn.query("UPDATE users SET avatar = ? WHERE id = ?", [avatarPath, user_id], (dbErr) => {
+      if (dbErr) return res.status(500).json({ message: "Gagal update DB avatar" });
       res.json({ message: "Avatar diperbarui", avatar: avatarPath });
-    }
-  );
+    });
+  });
 };
 
 export const deleteAvatar = (req, res) => {
@@ -49,21 +52,15 @@ export const deleteAvatar = (req, res) => {
 
 export const getAvatar = (req, res) => {
   const { user_id } = req.params;
+  const avatarDir = path.join(__dirname, "public", "uploads", "avatars");
+  const extensions = [".jpg", ".jpeg", ".png"];
 
-  conn.query("SELECT avatar FROM users WHERE id = ?", [user_id], (err, results) => {
-    if (err || results.length === 0) {
-      return res.status(404).json({ message: "User tidak ditemukan" });
+  for (const ext of extensions) {
+    const avatarPath = path.join(avatarDir, `${user_id}${ext}`);
+    if (fs.existsSync(avatarPath)) {
+      return res.sendFile(avatarPath);
     }
+  }
 
-    const avatar = results[0].avatar;
-
-    if (!avatar) {
-      return res.status(200).json({ 
-        message: "Avatar tidak tersedia",
-        fallback: true 
-      });
-    }
-
-    return res.json({ avatar });
-  });
+  return res.status(404).json({ message: "Avatar tidak ditemukan" });
 };
