@@ -58,15 +58,12 @@ export const getAvatar = (req, res) => {
     const avatar = results[0].avatar;
 
     if (!avatar) {
-  return res.status(200).json({ 
-    message: "Avatar tidak tersedia",
-    fallback: true 
-  });
-}
+      return res.status(200).json({ 
+        message: "Avatar tidak tersedia",
+        fallback: true 
+      });
+    }
 
-res.json({ avatar });
-
-
-    res.json({ avatar });
+    return res.json({ avatar });
   });
 };
